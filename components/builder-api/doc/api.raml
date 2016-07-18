@@ -1,0 +1,32 @@
+#%RAML 1.0
+title: Builder API
+version: v1
+baseUri: https://app.habitat.sh/{version}
+mediaType: application/json
+/status:
+  get:
+    description: Returns the health of the service
+    responses:
+      200:
+/authenticate/{code}:
+  get:
+/jobs:
+  post:
+/jobs/{id}:
+  get:
+/user/invitations:
+  get:
+/user/invitations/{id}:
+  put:
+/user/origins:
+  get:
+/projects:
+  post:
+    description: Create a new project
+/projects/{id}:
+  get:
+    description: Return the project matching the given ID
+  put:
+    description: Update the project matching the given ID
+  delete:
+    description: Destroys the project matching the given ID
