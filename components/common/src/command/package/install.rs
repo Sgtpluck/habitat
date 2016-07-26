@@ -42,12 +42,12 @@ use ansi_term::Colour::{Blue, Green, Yellow};
 use depot_client::Client;
 use hcore::crypto::{artifact, SigKeyPair};
 use hcore::crypto::keys::parse_name_with_rev;
-use hcore::fs::cache_artifact_path;
+use hcore::fs::{cache_artifact_path, pkg_path};
 use hcore::package::{Identifiable, PackageArchive, PackageIdent, PackageInstall};
 use protocol::depotsrv;
 
 use command::ProgressBar;
-use error::Result;
+use error::{Error, Result};
 
 pub fn start<P1: ?Sized, P2: ?Sized, P3: ?Sized>(url: &str,
                                                  ident_or_archive: &str,
@@ -61,6 +61,25 @@ pub fn start<P1: ?Sized, P2: ?Sized, P3: ?Sized>(url: &str,
           P2: AsRef<Path>,
           P3: AsRef<Path>
 {
+
+    let target = pkg_path();
+
+    match target.metadata() {
+        Ok(md) => {
+            if md.is_dir() == false {
+                return Err(Error::NotADirectory(target.to_string_lossy().into_owned()));
+            }
+            // this isn't quite right, cause i think we need to check the user?
+            if md.permissions().readonly() == true {
+                panic!("You cannot write here!!!!");
+            }
+        }
+        Err(e) => {
+            // this should probably say what the filename is that isn't found
+            return Err(Error::IO(e));
+        }
+    };
+
     if Path::new(ident_or_archive).is_file() {
         try!(from_archive(url,
                           &ident_or_archive,

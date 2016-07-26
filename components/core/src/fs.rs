@@ -137,6 +137,11 @@ pub fn cache_ssl_path(fs_root_path: Option<&Path>) -> PathBuf {
     }
 }
 
+/// Returns the path to locally installed packages.
+pub fn pkg_path() -> PathBuf {
+    Path::new(FS_ROOT_PATH).join(PKG_PATH)
+}
+
 /// Returns the root path containing all runtime service directories and files
 pub fn svc_root() -> PathBuf {
     Path::new("/").join(SVC_PATH).to_path_buf()

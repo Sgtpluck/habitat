@@ -34,6 +34,7 @@ pub enum Error {
     FileNameError,
     HabitatCore(hcore::Error),
     InvalidTomlError(String),
+    NotADirectory(String),
     /// Occurs when making lower level IO calls.
     IO(io::Error),
     JsonDecode(json::DecoderError),
@@ -58,6 +59,7 @@ impl fmt::Display for Error {
             Error::FileNameError => format!("Failed to extract a filename"),
             Error::HabitatCore(ref e) => format!("{}", e),
             Error::InvalidTomlError(ref e) => format!("Invalid TOML: {}", e),
+            Error::NotADirectory(ref e) => format!("{} is not a directory", e),
             Error::IO(ref err) => format!("{}", err),
             Error::JsonDecode(ref e) => format!("JSON decoding error: {}", e),
             Error::JsonEncode(ref e) => format!("JSON encoding error: {}", e),
@@ -81,6 +83,7 @@ impl error::Error for Error {
             Error::FileNameError => "Failed to extract a filename from a path",
             Error::HabitatCore(ref err) => err.description(),
             Error::InvalidTomlError(_) => "Invalid TOML",
+            Error::NotADirectory(_) => "This path is not a directory",
             Error::IO(ref err) => err.description(),
             Error::JsonDecode(_) => "JSON decoding error: {:?}",
             Error::JsonEncode(_) => "JSON encoding error",
